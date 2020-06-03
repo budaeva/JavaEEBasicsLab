@@ -1,27 +1,16 @@
 package osm.stax;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import osm.OsmContainer;
+import osm.OsmReader;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 
-public class StaxOsmReader implements AutoCloseable {
-    private final OsmContainer osmContainer;
-
-    private static final XMLInputFactory FACTORY = XMLInputFactory.newInstance();
-    private final XMLStreamReader reader;
-
-    private Logger logger = LoggerFactory.getLogger(StaxOsmReader.class);
-
+public class StaxOsmReader extends OsmReader {
     public StaxOsmReader(InputStream is) throws XMLStreamException {
+        super(is);
         logger.info("StaxOsmReader Constructor");
-        osmContainer = new OsmContainer();
-        reader = FACTORY.createXMLStreamReader(is);
     }
 
     public OsmContainer read() throws XMLStreamException {
@@ -47,24 +36,5 @@ public class StaxOsmReader implements AutoCloseable {
             }
         }
         return osmContainer;
-    }
-
-
-
-
-
-    public OsmContainer getOsmContainer() {
-        return osmContainer;
-    }
-
-    @Override
-    public void close() {
-        logger.info("close");
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (XMLStreamException e) { // empty
-            }
-        }
     }
 }

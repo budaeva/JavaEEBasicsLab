@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.jacobono.jaxb' version '1.3.5'
+}
+
+application {
+    mainClassName = 'Application'
+}
+
+jaxb {
+    xjc {
+        xsdDir = "src/main/resources"
+        generatePackage = "osm.jaxb.generated"
+    }
+}
+
+
+group 'ru.nsu.fit.16201.budaeva'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.28'
+
+    compile 'org.apache.commons:commons-compress:1.20'
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+
+    /*osm.jaxb 'com.sun.xml.bind:osm.jaxb-xjc:2.3.1'
+    compile group: 'com.sun.xml.bind', name: 'osm.jaxb-core', version: '2.3.0.1'
+    compile group: 'com.sun.xml.bind', name: 'osm.jaxb-impl', version: '2.3.1'
+    compile group: 'javax.xml.bind', name: 'osm.jaxb-api', version: '2.3.1'
+//    osm.jaxb 'com.sun.xml.bind:osm.jaxb-impl:2.2.7-b41'
+//    osm.jaxb 'javax.xml.bind:osm.jaxb-api:2.2.7'
+*/
+    /*compile group: 'javax.xml.bind', name: 'osm.jaxb-api', version: '2.3.1'
+    osm.jaxb 'com.sun.xml.bind:osm.jaxb-xjc:2.3.1-b41'
+    osm.jaxb 'com.sun.xml.bind:osm.jaxb-impl:2.2.7-b41'
+    osm.jaxb 'javax.xml.bind:osm.jaxb-api:2.2.7'
+*/
+
+
+    /*jaxb "com.sun.xml.bind:jaxb-core:2.2.11"
+    jaxb "com.sun.xml.bind:jaxb-impl:2.2.11"
+    jaxb "com.sun.xml.bind:jaxb-xjc:2.2.11"
+    jaxb "javax.xml.bind:jaxb-api:2.2.11"
+    jaxb "javax.activation:activation:1.1"
+*/
+    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.2.11'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.2.11'
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.11'
+    jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.11'
+
+}
+
+/*
+configurations {
+    jaxb
+}
+*/
+

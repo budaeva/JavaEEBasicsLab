@@ -1,7 +1,8 @@
-package osm;
+package osm.stax;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import osm.OsmContainer;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -9,29 +10,27 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 
-public class OsmReader implements AutoCloseable {
+public class StaxOsmReader implements AutoCloseable {
     private final OsmContainer osmContainer;
 
     private static final XMLInputFactory FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader reader;
 
-    private Logger logger = LoggerFactory.getLogger(OsmReader.class);
+    private Logger logger = LoggerFactory.getLogger(StaxOsmReader.class);
 
-    public OsmReader(InputStream is) throws XMLStreamException {
-        logger.info("constructor");
+    public StaxOsmReader(InputStream is) throws XMLStreamException {
+        logger.info("StaxOsmReader Constructor");
         osmContainer = new OsmContainer();
         reader = FACTORY.createXMLStreamReader(is);
     }
 
     public OsmContainer read() throws XMLStreamException {
-        logger.info("read start");
+        logger.info("StaxOsmReader read");
         while (reader.hasNext()) {
             int event = reader.next();
             if (event == XMLEvent.START_ELEMENT
                     && "node".equals(reader.getLocalName())) {
-//                logger.info("getting user");
                 String user = reader.getAttributeValue(null, "user");
-//                logger.info("user " + user);
                 osmContainer.addUserChange(user);
                 while (reader.hasNext()) {
                     int currentEvent = reader.next();
@@ -41,15 +40,12 @@ public class OsmReader implements AutoCloseable {
                     }
                     if (currentEvent == XMLEvent.START_ELEMENT
                             && "tag".equals(reader.getLocalName())) {
-//                        logger.info("getting key");
                         String key = reader.getAttributeValue(null, "k");
-//                        logger.info("key " + key);
                         osmContainer.addKeyCount(key);
                     }
                 }
             }
         }
-        logger.info("read end");
         return osmContainer;
     }
 

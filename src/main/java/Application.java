@@ -3,25 +3,27 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import osm.OsmContainer;
-import osm.OsmReader;
+import osm.stax.StaxOsmReader;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.*;
 
 public class Application {
+    private static Logger logger;
     public static void main(String[] args) {
-        Logger logger = LoggerFactory.getLogger(Application.class);
-        logger.info("main");
+        logger = LoggerFactory.getLogger(Application.class);
+        logger.info("Application main");
         printHelloWorld(System.out);
+//        osm.jaxb.JaxbOsmReader jaxbOsmReader = new JaxbOsmReader();
+//        jaxbOsmReader.getContext();
 
         String path = parseArgs(args);
         if ("".equals(path)) {
-            System.out.println("File name not specified");
             System.exit(0);
         }
 
         try (InputStream in = new BZip2CompressorInputStream(new FileInputStream(path))) {
-            OsmContainer osmContainer = new OsmReader(in).read();
+            OsmContainer osmContainer = new StaxOsmReader(in).read();
             osmContainer.getUserChangesSortedByValue().forEach(elem ->
                     System.out.println(elem.getKey() + " changed " +
                             elem.getValue() + " times"));
@@ -35,10 +37,14 @@ public class Application {
         } catch (XMLStreamException e) {
             e.printStackTrace();
         }
-        logger.info("main end");
     }
 
     private static String parseArgs(String[] args) {
+        logger.info("Application parseArgs");
+        if (args.length < 1) {
+            System.out.println("File name not specified");
+            return "";
+        }
         Options options = new Options();
         options.addOption("p", true, "path to OSM file");
         CommandLineParser parser = new DefaultParser();
@@ -53,7 +59,7 @@ public class Application {
     }
 
     public static void printHelloWorld(PrintStream out) {
-        LoggerFactory.getLogger(Application.class).info("printHelloWorld");
-        out.println("Hello, World!");
+        logger.info("printHelloWorld");
+        System.out.println("Hello, World!");
     }
 }

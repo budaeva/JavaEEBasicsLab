@@ -1,8 +1,10 @@
-package osm.jaxb.generated;
+package osm.jaxb;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import osm.OsmContainer;
+import osm.jaxb.generated.Node;
+import osm.jaxb.generated.Tag;
 import osm.stax.StaxOsmReader;
 
 import javax.xml.bind.JAXBContext;

@@ -1,4 +1,4 @@
-package osm.stax;
+package osm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

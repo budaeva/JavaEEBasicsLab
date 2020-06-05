@@ -15,7 +15,7 @@ public abstract class OsmReader implements AutoCloseable {
 
     protected final XMLStreamReader reader;
 
-    protected Logger logger = LoggerFactory.getLogger(StaxOsmReader.class);
+    protected Logger logger = LoggerFactory.getLogger(OsmReader.class);
 
     public OsmReader(InputStream is) throws XMLStreamException {
         osmContainer = new OsmContainer();
@@ -30,7 +30,7 @@ public abstract class OsmReader implements AutoCloseable {
 
     @Override
     public void close() {
-        logger.info("close");
+        logger.info("OsmReader: close");
         if (reader != null) {
             try {
                 reader.close();

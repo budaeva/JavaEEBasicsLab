@@ -1,3 +1,4 @@
+import db.DbUtils;
 import org.apache.commons.cli.*;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.slf4j.Logger;
@@ -16,12 +17,14 @@ public class Application {
     private static Boolean stax;
     public static void main(String[] args) {
         logger = LoggerFactory.getLogger(Application.class);
-        logger.info("Application main");
+        logger.info("Application: main");
         printHelloWorld(System.out);
 
         parseArgs(args);
         if ("".equals(path) || stax == null)
             System.exit(0);
+
+        new DbUtils();
 
 
         try (InputStream in = new BZip2CompressorInputStream(new FileInputStream(path))) {
@@ -46,10 +49,12 @@ public class Application {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
+
+
     }
 
     private static void parseArgs(String[] args) {
-        logger.info("Application parseArgs");
+        logger.info("Application: parseArgs");
         if (args.length < 3) {
             System.out.println("Wrong amount of arguments");
             return;
@@ -80,7 +85,7 @@ public class Application {
     }
 
     public static void printHelloWorld(PrintStream out) {
-        logger.info("printHelloWorld");
+        logger.info("Application: printHelloWorld");
         System.out.println("Hello, World!");
     }
 }

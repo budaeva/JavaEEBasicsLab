@@ -16,10 +16,10 @@ import java.util.List;
 public class JaxbOsmReader extends OsmReader {
     public JaxbOsmReader(InputStream is) throws XMLStreamException {
         super(is);
-        logger.info("JaxbOsmReader Constructor");
+        logger.info("JaxbOsmReader: Constructor");
     }
     public OsmContainer read() throws XMLStreamException, JAXBException {
-        logger.info("StaxOsmReader read");
+        logger.info("JaxbOsmReader: read");
         JAXBContext jaxbContext = JAXBContext.newInstance(Node.class);
         while (reader.hasNext()) {
             int event = reader.next();

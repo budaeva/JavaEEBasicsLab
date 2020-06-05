@@ -10,11 +10,11 @@ import java.io.InputStream;
 public class StaxOsmReader extends OsmReader {
     public StaxOsmReader(InputStream is) throws XMLStreamException {
         super(is);
-        logger.info("StaxOsmReader Constructor");
+        logger.info("StaxOsmReader: Constructor");
     }
 
     public OsmContainer read() throws XMLStreamException {
-        logger.info("StaxOsmReader read");
+        logger.info("StaxOsmReader: read");
         while (reader.hasNext()) {
             int event = reader.next();
             if (event == XMLEvent.START_ELEMENT

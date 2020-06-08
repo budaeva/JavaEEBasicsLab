@@ -4,9 +4,21 @@ import db.entities.Way;
 
 import java.util.List;
 
-public class WayDao implements Dao<Way> {
+public class WayDao /*implements Dao<Way>*/ {
+/*
+
     @Override
-    public void insert(Way value) {
+    public void insertWithQuery(Way value) {
+
+    }
+
+    @Override
+    public void insertWithPrepared(Way value) {
+
+    }
+
+    @Override
+    public void insertWithBatch(Way value) {
 
     }
 
@@ -28,5 +40,5 @@ public class WayDao implements Dao<Way> {
     @Override
     public void delete(Way value) {
 
-    }
+    }*/
 }

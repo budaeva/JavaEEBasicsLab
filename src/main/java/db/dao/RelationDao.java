@@ -4,8 +4,8 @@ import db.entities.Relation;
 
 import java.util.List;
 
-public class RelationDao implements Dao<Relation> {
-    @Override
+public class RelationDao/* implements Dao<Relation>*/ {
+    /*@Override
     public void insert(Relation value) {
 
     }
@@ -28,5 +28,5 @@ public class RelationDao implements Dao<Relation> {
     @Override
     public void delete(Relation value) {
 
-    }
+    }*/
 }

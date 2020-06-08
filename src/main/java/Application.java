@@ -15,17 +15,17 @@ public class Application {
     private static Logger logger;
     private static String path = "";
     private static Boolean stax;
+
+
     public static void main(String[] args) {
         logger = LoggerFactory.getLogger(Application.class);
         logger.info("Application: main");
         printHelloWorld(System.out);
 
         parseArgs(args);
+        loadToDB();
         if ("".equals(path) || stax == null)
             System.exit(0);
-
-        new DbUtils();
-
 
         try (InputStream in = new BZip2CompressorInputStream(new FileInputStream(path))) {
             OsmContainer osmContainer;
@@ -49,13 +49,19 @@ public class Application {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
+    }
 
 
+    private static void loadToDB() {
+        logger.info("Application: loadToDB");
+        DbUtils.connect();
+        DbUtils.initDB();
+        DbUtils.closeConnection();
     }
 
     private static void parseArgs(String[] args) {
         logger.info("Application: parseArgs");
-        if (args.length < 3) {
+        if (args.length < 2) {
             System.out.println("Wrong amount of arguments");
             return;
         }
@@ -75,10 +81,10 @@ public class Application {
                 Application.stax = true;
             else if (!cmd.hasOption(stax.getOpt()) && cmd.hasOption(jaxb.getOpt()))
                 Application.stax = false;
-            else {
+            /*else {
                 System.out.println("stax xor jaxb");
                 Application.stax = null;
-            }
+            }*/
         } catch (ParseException e) {
             e.printStackTrace();
         }

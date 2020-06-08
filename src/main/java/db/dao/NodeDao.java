@@ -9,7 +9,7 @@ public class NodeDao implements Dao<Node> {
 
     @Override
     public void insertWithQuery(Node value) {
-        Statement
+
     }
 
     @Override

@@ -6,7 +6,17 @@ import java.util.List;
 
 public class TagDao implements Dao<Tag> {
     @Override
-    public void insert(Tag value) {
+    public void insertWithQuery(Tag value) {
+
+    }
+
+    @Override
+    public void insertWithPrepared(Tag value) {
+
+    }
+
+    @Override
+    public void insertWithBatch(Tag value) {
 
     }
 

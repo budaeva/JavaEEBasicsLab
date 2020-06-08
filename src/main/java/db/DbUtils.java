@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DbUtils {
+    private static final int BUF_SIZE = 1024;
     private final static String SQL_INIT_FILE = "db_init.sql";
     private static Logger logger = LoggerFactory.getLogger(DbUtils.class);
 
@@ -20,26 +21,28 @@ public class DbUtils {
     private static Connection connection;
 
     public static void connect() {
-        logger.info("DatabaseManager: connect");
+        logger.info("DbUtils: connect");
         try {
             Class.forName("org.postgresql.Driver");
-            logger.info("DatabaseManager: Driver plugged in");
+            logger.info("DbUtils: Driver plugged in");
             connection = DriverManager.getConnection(DB_URL, LOGIN, PASSWORD);
-            logger.info("Database Manager: Connection established");
-            connection.close();
-            logger.info("Database Manager: Connection closed");
+            logger.info("DbUtils: Connection established");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void initDB() {
+    public static void initDB() {
+        logger.info("DbUtils: initDB");
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         File file = new File(classLoader.getResource(SQL_INIT_FILE).getFile());
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String query = bufferedReader.readLine();
+            char[] query = new char[BUF_SIZE];
+            int count = bufferedReader.read(query);
             Statement statement = connection.createStatement();
-            statement.execute(query);
+            logger.info("DbUtils: initDB query execution");
+            statement.execute(new String(query, 0,  count));
+            logger.info("DbUtils: initDB query executed");
             statement.closeOnCompletion();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -47,6 +50,18 @@ public class DbUtils {
             e.printStackTrace();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+    }
+
+    public static void closeConnection() {
+        logger.info("DbUtils: closeConnection");
+        if (connection != null) {
+            try {
+                connection.close();
+                logger.info("DbUtils: Connection closed");
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 

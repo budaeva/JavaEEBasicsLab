@@ -4,7 +4,7 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import osm.OsmContainer;
-import osm.jaxb.JaxbOsmReader;
+import osm.jaxb.JaxbOsmProcessor;
 import osm.stax.StaxOsmReader;
 
 import javax.xml.bind.JAXBException;
@@ -23,7 +23,7 @@ public class Application {
         printHelloWorld(System.out);
 
         parseArgs(args);
-        loadToDB();
+        loadDB();
         if ("".equals(path) || stax == null)
             System.exit(0);
 
@@ -31,8 +31,10 @@ public class Application {
             OsmContainer osmContainer;
             if (stax)
                 osmContainer = new StaxOsmReader(in).read();
-            else
-                osmContainer = new JaxbOsmReader(in).read();
+            else {
+                osmContainer = new JaxbOsmProcessor(in).read();
+            }
+            DbUtils.closeConnection();
 
             osmContainer.getUserChangesSortedByValue().forEach(elem ->
                     System.out.println(elem.getKey() + " changed " +
@@ -40,29 +42,26 @@ public class Application {
             osmContainer.getKeysCount().forEach((key, tagsCount) ->
                     System.out.println(key + " tagged " + tagsCount + " times"));
         } catch (FileNotFoundException e) {
-            System.out.println("Argument error: cannot find file!");
-//            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch (JAXBException e) {
-            e.printStackTrace();
+            logger.info("Argument error: cannot find file!");
+            logger.error(e.getMessage());
+        } catch (IOException | XMLStreamException | JAXBException e) {
+            logger.error(e.getMessage());
         }
     }
 
 
-    private static void loadToDB() {
+    private static void loadDB() {
         logger.info("Application: loadToDB");
         DbUtils.connect();
         DbUtils.initDB();
-        DbUtils.closeConnection();
     }
 
     private static void parseArgs(String[] args) {
         logger.info("Application: parseArgs");
         if (args.length < 2) {
-            System.out.println("Wrong amount of arguments");
+            String message = "Wrong amount of arguments";
+            System.out.println(message);
+            logger.info(message);
             return;
         }
         Options options = new Options();
@@ -81,10 +80,10 @@ public class Application {
                 Application.stax = true;
             else if (!cmd.hasOption(stax.getOpt()) && cmd.hasOption(jaxb.getOpt()))
                 Application.stax = false;
-            /*else {
+            else {
                 System.out.println("stax xor jaxb");
                 Application.stax = null;
-            }*/
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }

@@ -5,11 +5,11 @@ CREATE TABLE nodes(
     id BIGINT NOT NULL PRIMARY KEY,
     lon DOUBLE PRECISION NOT NULL,
     lat DOUBLE PRECISION NOT NULL,
-    username VARCHAR(256) NOT NULL,
-    uid BIGINT NOT NULL,
-    visible BOOLEAN NOT NULL,
-    version INT NOT NULL,
-    changelist BIGINT NOT NULL
+    username VARCHAR(256) NOT NULL
+--     uid BIGINT NOT NULL,
+--     visible BOOLEAN NOT NULL,
+--     version INT NOT NULL,
+--     changelist BIGINT NOT NULL
 );
 
 CREATE TABLE tags(

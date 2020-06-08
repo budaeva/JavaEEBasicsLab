@@ -1,5 +1,6 @@
 package osm.jaxb;
 
+import db.Service;
 import osm.OsmContainer;
 import osm.OsmReader;
 import osm.jaxb.generated.Node;
@@ -13,10 +14,12 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.List;
 
-public class JaxbOsmReader extends OsmReader {
-    public JaxbOsmReader(InputStream is) throws XMLStreamException {
+public class JaxbOsmProcessor extends OsmReader {
+    private final Service service;
+    public JaxbOsmProcessor(InputStream is) throws XMLStreamException {
         super(is);
         logger.info("JaxbOsmReader: Constructor");
+        service = new Service();
     }
     public OsmContainer read() throws XMLStreamException, JAXBException {
         logger.info("JaxbOsmReader: read");
@@ -27,12 +30,17 @@ public class JaxbOsmReader extends OsmReader {
                     && "node".equals(reader.getLocalName())) {
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                 Node node = (Node) unmarshaller.unmarshal(reader);
-                osmContainer.addUserChange(node.getUser());
-                List<Tag> tags = node.getTag();
-                tags.forEach(t -> osmContainer.addKeyCount(t.getK()));
+                workNode(node);
             }
         }
         return osmContainer;
+    }
+
+    private void workNode(Node node) {
+        osmContainer.addUserChange(node.getUser());
+        List<Tag> tags = node.getTag();
+        tags.forEach(t -> osmContainer.addKeyCount(t.getK()));
+        service.putWithBatch(node);
     }
 
 }

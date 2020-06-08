@@ -40,9 +40,9 @@ public class DbUtils {
             char[] query = new char[BUF_SIZE];
             int count = bufferedReader.read(query);
             Statement statement = connection.createStatement();
-            logger.info("DbUtils: initDB query execution");
+            logger.info("DbUtils: initDB execution of " + SQL_INIT_FILE);
             statement.execute(new String(query, 0,  count));
-            logger.info("DbUtils: initDB query executed");
+            logger.info("DbUtils: initDB executed: " + SQL_INIT_FILE);
             statement.closeOnCompletion();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

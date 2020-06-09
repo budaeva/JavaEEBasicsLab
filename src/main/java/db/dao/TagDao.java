@@ -2,10 +2,9 @@ package db.dao;
 
 import db.DbUtils;
 import db.entities.TagEntity;
-import osm.jaxb.generated.Tag;
 
-import java.math.BigInteger;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -31,7 +30,7 @@ public class TagDao implements Dao<TagEntity> {
     public void insertWithPrepared(TagEntity value) {
         String preSql = "insert into " + TAGS_TABLE_NAME + " (node_id, key, value) values (?, ?, ?);";
         try (PreparedStatement preparedStatement = DbUtils.getConnection().prepareStatement(preSql)) {
-            setFields(preparedStatement, value);
+            setFieldsForInsert(preparedStatement, value);
             preparedStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -43,7 +42,7 @@ public class TagDao implements Dao<TagEntity> {
         String preSql = "insert into " + TAGS_TABLE_NAME + " (node_id, key, value) values (?, ?, ?);";
         try (PreparedStatement batch = DbUtils.getConnection().prepareStatement(preSql)) {
             for (TagEntity tagEntity : values) {
-                setFields(batch, tagEntity);
+                setFieldsForInsert(batch, tagEntity);
                 batch.addBatch();
             }
             batch.executeBatch();
@@ -53,7 +52,7 @@ public class TagDao implements Dao<TagEntity> {
     }
 
 
-    private void setFields(PreparedStatement preparedStatement, TagEntity tagEntity) throws SQLException {
+    private void setFieldsForInsert(PreparedStatement preparedStatement, TagEntity tagEntity) throws SQLException {
         preparedStatement.setLong(1, tagEntity.getNode_id());
         preparedStatement.setString(2, tagEntity.getKey());
         preparedStatement.setString(3, tagEntity.getValue());
@@ -62,21 +61,15 @@ public class TagDao implements Dao<TagEntity> {
 
     @Override
     public TagEntity getById(long id) {
+        String sql = " select * from " + TAGS_TABLE_NAME + " where node_id = ?;";
+        try (PreparedStatement preparedStatement = DbUtils.getConnection().prepareStatement(sql)) {
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() ? new TagEntity(resultSet.getLong("node_id"), resultSet.getString("key"),
+                    resultSet.getString("value")) : null;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return null;
-    }
-
-    @Override
-    public List<TagEntity> getAll() {
-        return null;
-    }
-
-    @Override
-    public void update(TagEntity value) {
-
-    }
-
-    @Override
-    public void delete(TagEntity value) {
-
     }
 }

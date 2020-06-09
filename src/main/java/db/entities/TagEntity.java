@@ -13,6 +13,12 @@ public class TagEntity {
         this.value = tag.getV();
     }
 
+    public TagEntity(long node_id, String key, String value) {
+        this.node_id = node_id;
+        this.key = key;
+        this.value = value;
+    }
+
     public long getNode_id() {
         return node_id;
     }

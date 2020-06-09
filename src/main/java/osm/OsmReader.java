@@ -2,7 +2,6 @@ package osm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import osm.stax.StaxOsmReader;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLInputFactory;

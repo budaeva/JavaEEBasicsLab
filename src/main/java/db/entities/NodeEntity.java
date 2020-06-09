@@ -23,6 +23,13 @@ public class NodeEntity {
             tags.add(new TagEntity(tag, this.id));
     }
 
+    public NodeEntity(long id, double lon, double lat, String user) {
+        this.id = id;
+        this.lon = lon;
+        this.lat = lat;
+        this.user = user;
+    }
+
     public long getId() {
         return id;
     }

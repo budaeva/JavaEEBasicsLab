@@ -9,13 +9,9 @@ public interface Dao<T> {
     void insertWithPrepared(T value);
     void insertWithBatch(List<T> values);
     T getById(long id);
-    List<T> getAll();
-    void update(T value);
-    void delete(T value);
 
     default String checkString(String src) {
         if (src.contains("'")) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!1   " + src + "       !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             return src.replace("'", "\'");
         }
         return src;

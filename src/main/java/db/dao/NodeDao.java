@@ -3,9 +3,9 @@ package db.dao;
 import db.DbUtils;
 import db.entities.NodeEntity;
 import db.entities.TagEntity;
-import osm.jaxb.generated.Node;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -63,23 +63,22 @@ public class NodeDao implements Dao<NodeEntity> {
 
     @Override
     public NodeEntity getById(long id) {
+        String sql = " select * from " + NODES_TABLE_NAME + " where id = ?;";
+        try (PreparedStatement preparedStatement = DbUtils.getConnection().prepareStatement(sql)) {
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() ? new NodeEntity(resultSet.getLong("id"),
+                    resultSet.getDouble("lon"),
+                    resultSet.getDouble("lat"),
+                    resultSet.getString("user")) : null;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return null;
-    }
-
-    @Override
-    public List<NodeEntity> getAll() {
-        return null;
-    }
-
-    @Override
-    public void update(NodeEntity value) {
 
     }
 
-    @Override
-    public void delete(NodeEntity value) {
 
-    }
 
 
 }
